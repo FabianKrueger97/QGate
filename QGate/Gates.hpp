@@ -2,9 +2,8 @@
 #define GATES_H
 
 #include <time.h>
-#include <SDL.h>
-#include <SDL_image.h>
-#include <time.h>
+#include <SDL2/SDL.h>
+#include <SDL2_image/SDL_image.h>
 #include <math.h>
 #include <iostream>
 #include <cstdint>
@@ -12,7 +11,9 @@
 #include <sstream>
 #include <algorithm>
 #include <string>
-#include <SDL_ttf.h>
+#include <SDL2_ttf/SDL_ttf.h>
+#include "QBit.hpp"
+
 using namespace std;
 
 class Gates{
@@ -23,7 +24,7 @@ class Gates{
         int breite;
     public:
         Gates(int type);
-        vector<Qbit> run(vector<QBit>Bits);
+        vector<QBit> run(vector<QBit>Bits);
         };
 
 class SigZ{
@@ -32,10 +33,8 @@ private:
     SDL_Rect rect;
 public:
     SigZ();
-    QBit run(QBit)
+    QBit run(QBit);
     };
-
-
 
 
 #endif // GATES_H
