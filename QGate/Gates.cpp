@@ -1,3 +1,3 @@
 #include "Gates.hpp"
 
-Gates::Gates()
+//Gates::Gates()

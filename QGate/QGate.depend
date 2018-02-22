@@ -1,0 +1,45 @@
+# depslib dependency file v1.0
+1519312227 source:c:\users\el babbel\desktop\c++\qgate\qgate\buttons.cpp
+
+1519313687 source:c:\users\el babbel\desktop\c++\qgate\qgate\gates.cpp
+	"Gates.hpp"
+
+1519313677 c:\users\el babbel\desktop\c++\qgate\qgate\gates.hpp
+	<time.h>
+	<math.h>
+	<iostream>
+	<cstdint>
+	<vector>
+	<sstream>
+	<algorithm>
+	<string>
+	"QBit.hpp"
+
+1519314654 c:\users\el babbel\desktop\c++\qgate\qgate\qbit.hpp
+	<string>
+	<sstream>
+	<vector>
+	<iostream>
+	<exception>
+	<stdexcept>
+	<math.h>
+	<complex.h>
+
+1519316888 source:c:\users\el babbel\desktop\c++\qgate\qgate\qbit.cpp
+	"QBit.hpp"
+
+1519316864 source:c:\users\el babbel\desktop\c++\qgate\qgate\qgate.cpp
+	"QBit.hpp"
+	"GateFunk.hpp"
+	"Gates.hpp"
+
+1519317653 c:\users\el babbel\desktop\c++\qgate\qgate\gatefunk.hpp
+	<sstream>
+	<vector>
+	<iostream>
+	<exception>
+	<stdexcept>
+	<math.h>
+	<complex.h>
+	"QBit.hpp"
+

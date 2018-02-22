@@ -33,6 +33,7 @@
 		</Compiler>
 		<Unit filename="Buttons.cpp" />
 		<Unit filename="Buttons.hpp" />
+		<Unit filename="GateFunk.hpp" />
 		<Unit filename="Gates.cpp" />
 		<Unit filename="Gates.hpp" />
 		<Unit filename="QBit.cpp" />
