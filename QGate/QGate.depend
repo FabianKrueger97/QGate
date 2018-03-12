@@ -43,3 +43,47 @@
 	<complex.h>
 	"QBit.hpp"
 
+1520875955 source:c:\users\el babbel\desktop\progammieren\c++\qgate\qgate\buttons.cpp
+
+1520875955 source:c:\users\el babbel\desktop\progammieren\c++\qgate\qgate\gates.cpp
+	"Gates.hpp"
+
+1520875955 c:\users\el babbel\desktop\progammieren\c++\qgate\qgate\gates.hpp
+	<time.h>
+	<math.h>
+	<iostream>
+	<cstdint>
+	<vector>
+	<sstream>
+	<algorithm>
+	<string>
+	"QBit.hpp"
+
+1520875955 c:\users\el babbel\desktop\progammieren\c++\qgate\qgate\qbit.hpp
+	<string>
+	<sstream>
+	<vector>
+	<iostream>
+	<exception>
+	<stdexcept>
+	<math.h>
+	<complex.h>
+
+1520875955 source:c:\users\el babbel\desktop\progammieren\c++\qgate\qgate\qbit.cpp
+	"QBit.hpp"
+
+1520875955 source:c:\users\el babbel\desktop\progammieren\c++\qgate\qgate\qgate.cpp
+	"QBit.hpp"
+	"GateFunk.hpp"
+	"Gates.hpp"
+
+1520875955 c:\users\el babbel\desktop\progammieren\c++\qgate\qgate\gatefunk.hpp
+	<sstream>
+	<vector>
+	<iostream>
+	<exception>
+	<stdexcept>
+	<math.h>
+	<complex.h>
+	"QBit.hpp"
+
