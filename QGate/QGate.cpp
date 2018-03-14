@@ -3,7 +3,7 @@
 #include "Gates.hpp"
 using namespace std;
 
-int main(){
+int main(int, char**){
 
 
 double q = 1/sqrt(2);
