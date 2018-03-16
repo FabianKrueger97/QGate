@@ -27,4 +27,7 @@ cout <<(*pauli_z(Bits4)[0]).value <<endl;
 cout <<(*hadamard(Bits5)[0]).value <<endl;}
 catch (const runtime_error &e){
 cout<<"runtime_error: "<<e.what()<<endl;}
+
+cin.ignore();
 return 0;}
+

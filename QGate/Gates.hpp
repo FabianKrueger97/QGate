@@ -2,6 +2,7 @@
 #define GATES_H
 
 #include <time.h>
+#include <SDL_ttf.h>
 #include <SDL.h>
 #include <SDL_image.h>
 #include <math.h>
