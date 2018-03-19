@@ -15,6 +15,10 @@ vector<QBit*> hadamard(vector<QBit*> Bits) {
     return Bits;
 }
 
+vector<QBit*> id(vector<QBit*> Bits){
+    return Bits;
+}
+
 vector<QBit*> pauli_x(vector<QBit*> Bits) {
     if (Bits.size()>1)
         throw runtime_error("Pauli_X bekam Mehrbitinput!");
@@ -49,3 +53,11 @@ vector<QBit*> pauli_z(vector<QBit*> Bits) {
     return Bits;
 }
 
+
+void paint_map(vector<vector<Gates>>map, SDL_Window *win){
+    for(vector<Gates> uv : map){
+        for(Gates g : uv){
+            g.paint_gate(win);
+        }
+    }
+}
