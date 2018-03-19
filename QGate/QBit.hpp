@@ -11,8 +11,6 @@
 using namespace std;
 class QBit{
 private:
-
-
 public:
     string value;
     complex<double>a,b;

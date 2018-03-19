@@ -19,13 +19,14 @@ using namespace std;
 
 class Gates{
     private:
-        //SDL_Surface* surf;
-        //SDL_Rect rect;
+        SDL_Surface* surf;
+        SDL_Rect rect;
         int type;
         int breite;
     public:
         Gates(int type);
-        vector<QBit> run(vector<QBit>Bits);
+        vector<QBit*> run(vector<QBit*>Bits);
+        void paint_gate(SDL_Window *win);
         };
 
 class SigZ{
