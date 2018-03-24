@@ -27,6 +27,7 @@ class Gates{
         vector<vector<vector<complex<double>>>> mat;
         int breite;
         int num;
+        void move(SDL_Window* win);
         void paint_gate(SDL_Window *win);
         };
 

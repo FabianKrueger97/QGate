@@ -18,20 +18,23 @@ for (int i = 1; i < 7; ++i)
 {
 	gate.push_back(Gates(i));
 }
-vector<vector<Gates>>map;
-map.push_back(gate);
+vector<vector<Gates>>map,palette;
+palette.push_back(gate);
+paint_map(palette,win);
 paint_map(map,win);
-vector<Gates>rudi;
-rudi.push_back(Gates(2));
-rudi.push_back(Gates(3));
-vector<vector<complex<double>>> red = tensm(gate);
-/*for (vector<complex<double>> v : red){
-	for(complex<double> num : v){
-		cout << num;
-	}
-	cout<<endl;
-}*/
-cout<<"ready";
+Gates u(3);
+bool laeuft = true, horst = true;
+SDL_Event f;
+while (laeuft){
+while(horst){
+	if (SDL_PollEvent(&f)){
+	if(f.type == SDL_KEYDOWN)
+		horst = false;
+}}
+
+u.move(win);
+laeuft = false;
+}
 SDL_Delay(30000);
 return 0;}
 

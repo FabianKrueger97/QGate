@@ -6,6 +6,13 @@ Gates::Gates(int typ){
 	double p = sqrt(2.);
 	complex<double> q = 1/p;
 	switch(typ){
+		case 0:
+		{
+			surf = IMG_Load(":/Bilder/id.png");
+			breite = 1;
+			num = 1;
+			mat = {{{1.,0.},{0.,1.}}};
+		}
 		case 1:
 		{
 			surf = IMG_Load("./Bilder/hadamard.png");
@@ -55,8 +62,8 @@ Gates::Gates(int typ){
 		}
 	}
 	int a = (typ+1) % 2;
-	rect.x = 1000 + (breite % 2) * a * 51;
-	rect.y = 100 + (breite % 2)*((typ+1 - a)/2 -1 ) * 51 + (breite+1)%2 * (typ-3) * 51 ;
+	rect.x = 1000 + (breite % 2) * a * 50;
+	rect.y = 100 + (breite % 2)*((typ+1 - a)/2 -1 ) * 50 + (breite+1)%2 * (typ-3) * 50 ;
 	rect.w = 50*breite;
 	rect.h = 50*breite;
 }
@@ -67,3 +74,19 @@ void Gates::paint_gate(SDL_Window* win){
 	SDL_BlitSurface(surf,NULL,screen,&rect);
 	SDL_UpdateWindowSurface(win);
 }
+
+void Gates::move(SDL_Window* win){
+	SDL_Event e;
+	bool left = false;
+	while(!left){
+		while(SDL_PollEvent(&e)){
+		if(e.type != SDL_MOUSEBUTTONUP){
+			int xn,yn;
+			SDL_GetMouseState( &xn, &yn);
+			rect.x = xn-25*breite;
+			rect.y = yn-25;
+			paint_gate(win);
+	}
+	else
+		left = true;
+}}}
