@@ -22,10 +22,11 @@ class Gates{
         SDL_Surface* surf;
         SDL_Rect rect;
         int type;
-        int breite;
     public:
         Gates(int type);
-        vector<QBit*> run(vector<QBit*>Bits);
+        vector<vector<vector<complex<double>>>> mat;
+        int breite;
+        int num;
         void paint_gate(SDL_Window *win);
         };
 

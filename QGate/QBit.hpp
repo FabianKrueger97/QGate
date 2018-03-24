@@ -13,7 +13,7 @@ class QBit{
 private:
 public:
     string value;
-    complex<double>a,b;
+    vector<complex<double>>vek;
     QBit(complex<double>a0, complex<double>b0);
     void make_value();
     };

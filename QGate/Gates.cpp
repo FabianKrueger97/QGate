@@ -3,63 +3,62 @@
 
 Gates::Gates(int typ){
 	type = typ;
+	double p = sqrt(2.);
+	complex<double> q = 1/p;
 	switch(typ){
 		case 1:
 		{
 			surf = IMG_Load("./Bilder/hadamard.png");
-			breite = 1; 
+			breite = 1;
+			num = 1;
+			mat = {{{q,q},{q,-q}}};
 		}
 		break;
 		case 2:
 		{
 			surf = IMG_Load("./Bilder/paulix.png");
 			breite = 1; 
+			num = 1;
+			mat = {{{0.,1.},{1.,0.}}};
 		}
 		break;
 		case 3:
 		{
 			surf = IMG_Load("./Bilder/pauliy.png");
-			breite = 1; 
+			breite = 1;
+			num = 1; 
+			mat = {{{0.,-1.i},{1.i,0.}}};
 		}
 		break;
 		case 4:
 		{
 			surf = IMG_Load("./Bilder/pauliz.png");
 			breite = 1; 
+			num = 1;
+			mat = {{{1.,0},{0.,-1.}}};
 		}
 		break;
+		case 5:
+		{
+			surf = IMG_Load("./Bilder/cnot.png");
+			breite = 2;
+			num = 2;
+			mat = {{{1.,0.,0.,0.},{0.,1.,0.,0.},{0.,0.,0.,1.},{0.,0.,1.,0.}}};
+		}
+		break;
+		case 6:
+		{
+			surf = IMG_Load("./Bilder/swap.png");
+			breite = 2;
+			num = 4;
+			mat = {{{1.,0.,0.,0.},{0.,0.,1.,0.},{0.,1.,0.,0.},{0.,0.,0.,1.}}};
+		}
 	}
 	int a = (typ+1) % 2;
-	rect.x = 1000 + a*50;
-	rect.y = 100 + ((typ+1 - a)/2 -1 ) * 50;
-	rect.w = 50;
-	rect.h = 50;
-}
-
-vector<QBit*> Gates::run(vector<QBit*>Bits){
-	switch(type){
-		case 1:
-		{
-			return hadamard(Bits);
-		}		
-		break;
-		case 2:
-		{
-			return pauli_x(Bits);
-		}
-		break;
-		case 3:
-		{
-			return pauli_y(Bits);
-		}
-		break;
-		case 4:
-		{
-			return pauli_z(Bits);
-		}		
-		break;
-
-	}
+	rect.x = 1000 + (breite % 2) * a * 51;
+	rect.y = 100 + (breite % 2)*((typ+1 - a)/2 -1 ) * 51 + (breite+1)%2 * (typ-3) * 51 ;
+	rect.w = 50*breite;
+	rect.h = 50*breite;
 }
 
 void Gates::paint_gate(SDL_Window* win){

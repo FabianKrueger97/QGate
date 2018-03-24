@@ -1,56 +1,54 @@
 #include "GateFunk.hpp"
 
 using namespace std;
-
-vector<QBit*> hadamard(vector<QBit*> Bits) {
-    if (Bits.size()>1)
-        throw runtime_error("Hadamard bekam Mehrbitinput!");
-    if (Bits.size()==0)
-        throw runtime_error("Hadamard bekam Nullbitinput!");
-    string str_a, str_b;
-    complex<double> a_copy = (*Bits[0]).a;
-    (*Bits[0]).a = ((*Bits[0]).a + (*Bits[0]).b)/sqrt(2);
-    (*Bits[0]).b = (a_copy - (*Bits[0]).b)/sqrt(2);
-    (*Bits[0]).make_value();
-    return Bits;
+vector<complex<double>> tensv(vector<QBit> Bits){
+vector<vector<complex<double>>> veks;
+for (QBit bit : Bits){
+    veks.push_back(bit.vek);
+}
+tensvh(&veks);
+return veks[0];
 }
 
-vector<QBit*> id(vector<QBit*> Bits){
-    return Bits;
+void tensvh(vector<vector<complex<double>>>* veks){
+    vector<complex<double>>zwischen;
+    for (complex<double>num1 : (*veks)[0]){
+        for (complex<double>num2 : (*veks)[1]){
+            zwischen.push_back(num1*num2);
+        }
+    }
+    (*veks)[1] = zwischen;
+    (*veks).erase((*veks).begin()+0);
+    if ((*veks).size() != 1)
+        tensvh(veks);
+
 }
 
-vector<QBit*> pauli_x(vector<QBit*> Bits) {
-    if (Bits.size()>1)
-        throw runtime_error("Pauli_X bekam Mehrbitinput!");
-    if (Bits.size()==0)
-        throw runtime_error("Pauli_X bekam Nullbitinput!");
-    complex<double> a_copy = (*Bits[0]).a;
-    (*Bits[0]).a = (*Bits[0]).b;
-    (*Bits[0]).b = a_copy;
-    (*Bits[0]).make_value();
-    return Bits;
+vector<vector<complex<double>>> tensm(vector<Gates>gate){
+    vector<vector<vector<complex<double>>>> mats;
+    for (Gates g:gate){
+        mats.push_back(g.mat[0]);
+    }
+    tensmh(&mats);
+    return mats[0];
 }
 
-vector<QBit*> pauli_y(vector<QBit*> Bits) {
-    if (Bits.size()>1)
-        throw runtime_error("Pauli_Y bekam Mehrbitinput!");
-    if (Bits.size()==0)
-        throw runtime_error("Pauli_Y bekam Nullbitinput!");
-    complex<double> a_copy = (*Bits[0]).a, c = -1i;
-    (*Bits[0]).a = (*Bits[0]).b*c;
-    (*Bits[0]).b = a_copy*(-c);
-    (*Bits[0]).make_value();
-    return Bits;
-}
+void tensmh(vector<vector<vector<complex<double>>>>* mats){
+    vector<vector<complex<double>>>zwischen;
+    for (vector<complex<double>>vek1 : (*mats)[0]){
+        for (vector<complex<double>>vek2 : (*mats)[1]){
+            vector<vector<complex<double>>>veks;
+            veks.push_back(vek1);
+            veks.push_back(vek2);
+            tensvh(&veks);
+            zwischen.push_back(veks[0]);
+        }
+    }
+    (*mats)[1] = zwischen;
+    (*mats).erase((*mats).begin()+0);
+    if ((*mats).size() != 1)
+        tensmh(mats);
 
-vector<QBit*> pauli_z(vector<QBit*> Bits) {
-    if (Bits.size()>1)
-        throw runtime_error("Pauli_Z bekam Mehrbitinput!");
-    if (Bits.size()==0)
-        throw runtime_error("Pauli_Z bekam Nullbitinput!");
-    (*Bits[0]).b = -((*Bits[0]).b);
-    (*Bits[0]).make_value();
-    return Bits;
 }
 
 

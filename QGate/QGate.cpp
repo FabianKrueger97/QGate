@@ -14,13 +14,24 @@ if (SDL_Init(SDL_INIT_VIDEO) != 0){
                 return 1;
                 }
 vector<Gates>gate;
-for (int i = 1; i < 5; ++i)
+for (int i = 1; i < 7; ++i)
 {
 	gate.push_back(Gates(i));
 }
 vector<vector<Gates>>map;
 map.push_back(gate);
 paint_map(map,win);
-SDL_Delay(3000);
+vector<Gates>rudi;
+rudi.push_back(Gates(2));
+rudi.push_back(Gates(3));
+vector<vector<complex<double>>> red = tensm(gate);
+/*for (vector<complex<double>> v : red){
+	for(complex<double> num : v){
+		cout << num;
+	}
+	cout<<endl;
+}*/
+cout<<"ready";
+SDL_Delay(30000);
 return 0;}
 
