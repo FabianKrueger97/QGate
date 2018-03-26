@@ -51,9 +51,49 @@ void tensmh(vector<vector<vector<complex<double>>>>* mats){
 
 }
 
+void klicked(vector<vector<Gates>>*map,vector<vector<Gates>>*palette,vector<QBit>*eingang,SDL_Window *win, bool *laeuft){
+    int xn,yn;
+    SDL_GetMouseState( &xn, &yn);
+    if (xn>1179 && yn<51 ){
+        *laeuft = false;
+    }
+    if (xn>999 && xn<1101 && yn>99 && yn<301){
+        int t;
+        if (yn<151){
+            if (xn<1051)
+                t = 1;
+            else
+                t = 2;
+        }
+        if (yn<201 && yn>150){
+            if (xn<1051)
+                t = 3;
+            else
+                t = 4;
+        }
+        if (yn<251 && yn>200)
+            t = 5;
+        if (yn<301 && yn>250)
+            t = 6;
+        Gates ngate(t);
+        ngate.move(win,palette,map);
+        vector<int>arraypos = ngate.pos_in();
+        (*map)[arraypos[0]][arraypos[1]] = ngate;
+        paint_back(win);
+        paint_gmap(palette,win);
+        paint_gmap(map,win);
+        SDL_UpdateWindowSurface(win);
+    }
+}
 
-void paint_map(vector<vector<Gates>>map, SDL_Window *win){
-    for(vector<Gates> uv : map){
+void paint_back(SDL_Window *win){
+    SDL_Surface *back = IMG_Load("./Bilder/map.png");
+    SDL_Surface *screen;
+    screen = SDL_GetWindowSurface(win);
+    SDL_BlitSurface(back,NULL,screen,NULL);
+    }
+void paint_gmap(vector<vector<Gates>>*map, SDL_Window *win){
+    for(vector<Gates> uv : (*map)){
         for(Gates g : uv){
             g.paint_gate(win);
         }

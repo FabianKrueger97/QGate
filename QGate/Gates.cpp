@@ -72,10 +72,9 @@ void Gates::paint_gate(SDL_Window* win){
 	SDL_Surface *screen;
 	screen = SDL_GetWindowSurface(win);
 	SDL_BlitSurface(surf,NULL,screen,&rect);
-	SDL_UpdateWindowSurface(win);
 }
 
-void Gates::move(SDL_Window* win){
+void Gates::move(SDL_Window* win,vector<vector<Gates>>*palette,vector<vector<Gates>>*map){
 	SDL_Event e;
 	bool left = false;
 	while(!left){
@@ -85,8 +84,25 @@ void Gates::move(SDL_Window* win){
 			SDL_GetMouseState( &xn, &yn);
 			rect.x = xn-25*breite;
 			rect.y = yn-25;
+			paint_back(win);
 			paint_gate(win);
+			paint_gmap(palette,win);
+			paint_gmap(map,win);
+			SDL_UpdateWindowSurface(win);
+
 	}
 	else
 		left = true;
 }}}
+
+vector<int> Gates::pos_in(){
+	int xn,yn,zeile,spalte;
+	SDL_GetMouseState( &xn, &yn);
+	xn -= 400;
+	yn -= 65;
+	zeile = (yn - yn%60)/60;
+	spalte = (xn - xn%50)/50;
+	rect.y = zeile * 60 + 70;
+	rect.x = spalte * 50 + 400 + (breite%2 - 1)*50;
+	return {zeile,spalte};
+}

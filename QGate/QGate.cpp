@@ -13,28 +13,35 @@ if (SDL_Init(SDL_INIT_VIDEO) != 0){
                 cout << "window failed";
                 return 1;
                 }
-vector<Gates>gate;
+vector<Gates>pal;
+paint_back(win);
 for (int i = 1; i < 7; ++i)
 {
-	gate.push_back(Gates(i));
+	pal.push_back(Gates(i));
 }
 vector<vector<Gates>>map,palette;
-palette.push_back(gate);
-paint_map(palette,win);
-paint_map(map,win);
-Gates u(3);
-bool laeuft = true, horst = true;
-SDL_Event f;
-while (laeuft){
-while(horst){
-	if (SDL_PollEvent(&f)){
-	if(f.type == SDL_KEYDOWN)
-		horst = false;
-}}
-
-u.move(win);
-laeuft = false;
+for (int i=0; i < 11; i++){
+	vector<Gates>zeile;
+	for (int i=0; i<9; i++){
+		zeile.push_back(Gates(0));
+	}
+	map.push_back(zeile);
 }
-SDL_Delay(30000);
+palette.push_back(pal);
+paint_gmap(&palette,win);
+paint_gmap(&map,win);
+bool laeuft = true;
+vector<QBit> eingang;
+for (int i=0;i<9;i++){
+	eingang.push_back(QBit((1.,0),(0.,0.)));
+}
+while (laeuft){
+	SDL_Event e;
+	while(SDL_PollEvent(&e)){
+		if(e.type == SDL_MOUSEBUTTONDOWN){
+			klicked(&map,&palette,&eingang,win,&laeuft);
+		}
+	}
+}
 return 0;}
 

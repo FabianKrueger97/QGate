@@ -27,8 +27,9 @@ class Gates{
         vector<vector<vector<complex<double>>>> mat;
         int breite;
         int num;
-        void move(SDL_Window* win);
+        void move(SDL_Window* win, vector<vector<Gates>>*palette, vector<vector<Gates>> *map);
         void paint_gate(SDL_Window *win);
+        vector<int> pos_in();
         };
 
 class SigZ{
