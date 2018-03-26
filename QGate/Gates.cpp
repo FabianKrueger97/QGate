@@ -85,9 +85,9 @@ void Gates::move(SDL_Window* win,vector<vector<Gates>>*palette,vector<vector<Gat
 			rect.x = xn-25*breite;
 			rect.y = yn-25;
 			paint_back(win);
-			paint_gate(win);
 			paint_gmap(palette,win);
 			paint_gmap(map,win);
+			paint_gate(win);
 			SDL_UpdateWindowSurface(win);
 
 	}
@@ -95,14 +95,43 @@ void Gates::move(SDL_Window* win,vector<vector<Gates>>*palette,vector<vector<Gat
 		left = true;
 }}}
 
-vector<int> Gates::pos_in(){
+void Gates::pos_in(vector<vector<Gates>>*map){
 	int xn,yn,zeile,spalte;
 	SDL_GetMouseState( &xn, &yn);
 	xn -= 400;
 	yn -= 65;
 	zeile = (yn - yn%60)/60;
-	spalte = (xn - xn%50)/50;
+	spalte = (xn - xn%50)/50 - (breite+1)%2 * (1 - round((xn%50)/50));
 	rect.y = zeile * 60 + 70;
-	rect.x = spalte * 50 + 400 + (breite%2 - 1)*50;
-	return {zeile,spalte};
+	rect.x = spalte * 50 + 400;
+	if ((*map)[zeile][spalte].type>4 && (*map)[zeile][spalte+1].type>4){
+		if (breite==1){
+		(*map)[zeile][spalte+1] = Gates(0);
+		}
+		else{
+			(*map).erase((*map).begin()+spalte+1);
+		}
+
+		}
+	if ((*map)[zeile][spalte].type>4 && (*map)[zeile][spalte-1].type>4){
+		if (breite==1){
+		(*map)[zeile][spalte-1] = Gates(0);
+		}
+		else{
+			(*map)[zeile][spalte-1] = Gates(0);
+		}
+
+		}
+		if ((*map)[zeile][spalte-2].type>4)
+			spalte--;
+		(*map)[zeile][spalte] = (*this);
+		if (breite == 2)
+			(*map)[zeile].erase((*map)[zeile].begin()+spalte + 1);
+		for (vector<Gates> uv : (*map)){
+			for (Gates g : uv){
+				cout << g.type;
+	}
+	cout<< endl;
+}
+cout << endl;
 }

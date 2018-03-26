@@ -22,14 +22,16 @@ for (int i = 1; i < 7; ++i)
 vector<vector<Gates>>map,palette;
 for (int i=0; i < 11; i++){
 	vector<Gates>zeile;
-	for (int i=0; i<9; i++){
+	for (int i=0; i<8; i++){
 		zeile.push_back(Gates(0));
 	}
 	map.push_back(zeile);
 }
 palette.push_back(pal);
+paint_back(win);
 paint_gmap(&palette,win);
 paint_gmap(&map,win);
+SDL_UpdateWindowSurface(win);
 bool laeuft = true;
 vector<QBit> eingang;
 for (int i=0;i<9;i++){

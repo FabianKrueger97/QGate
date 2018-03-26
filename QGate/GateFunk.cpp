@@ -75,14 +75,23 @@ void klicked(vector<vector<Gates>>*map,vector<vector<Gates>>*palette,vector<QBit
             t = 5;
         if (yn<301 && yn>250)
             t = 6;
-        Gates ngate(t);
-        ngate.move(win,palette,map);
-        vector<int>arraypos = ngate.pos_in();
-        (*map)[arraypos[0]][arraypos[1]] = ngate;
+        Gates *gz = new Gates(t);
+        (*gz).move(win,palette,map);
+        SDL_GetMouseState( &xn, &yn);
+        if (xn>800 || xn<400 || yn<70 || yn>720){
+            delete gz;
+            paint_back(win);
+            paint_gmap(palette,win);
+            paint_gmap(map,win);
+            SDL_UpdateWindowSurface(win);
+            return;
+        }
+        (*gz).pos_in(map);
         paint_back(win);
         paint_gmap(palette,win);
         paint_gmap(map,win);
         SDL_UpdateWindowSurface(win);
+        delete gz;
     }
 }
 
