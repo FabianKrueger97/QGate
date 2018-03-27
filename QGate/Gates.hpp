@@ -30,6 +30,7 @@ class Gates{
         void move(SDL_Window* win, vector<vector<Gates>>*palette, vector<vector<Gates>> *map);
         void paint_gate(SDL_Window *win);
         void pos_in(vector<vector<Gates>>*map);
+        void pos_rect(int xn, int yn);
         };
 
 class SigZ{

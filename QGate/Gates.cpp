@@ -8,11 +8,12 @@ Gates::Gates(int typ){
 	switch(typ){
 		case 0:
 		{
-			surf = IMG_Load(":/Bilder/id.png");
+			surf = IMG_Load("./Bilder/id.png");
 			breite = 1;
 			num = 1;
 			mat = {{{1.,0.},{0.,1.}}};
 		}
+		break;
 		case 1:
 		{
 			surf = IMG_Load("./Bilder/hadamard.png");
@@ -102,36 +103,126 @@ void Gates::pos_in(vector<vector<Gates>>*map){
 	yn -= 65;
 	zeile = (yn - yn%60)/60;
 	spalte = (xn - xn%50)/50 - (breite+1)%2 * (1 - round((xn%50)/50));
+	if (breite == 2 && spalte ==7)
+		spalte--;
 	rect.y = zeile * 60 + 70;
 	rect.x = spalte * 50 + 400;
-	if ((*map)[zeile][spalte].type>4 && (*map)[zeile][spalte+1].type>4){
-		if (breite==1){
-		(*map)[zeile][spalte+1] = Gates(0);
-		}
-		else{
-			(*map).erase((*map).begin()+spalte+1);
-		}
+	if (breite == 1){
+		vector<int> ueber;
+		int n = 0, i = 0; 
+		while (ueber.size() < 8){
+			if ((*map)[zeile][i].type>4){
+				ueber.push_back(n);
+				ueber.push_back(n);
+				i++;
+			}
+			else
+				ueber.push_back(n);
+			n++;
+			i++;
 
 		}
-	if ((*map)[zeile][spalte].type>4 && (*map)[zeile][spalte-1].type>4){
-		if (breite==1){
-		(*map)[zeile][spalte-1] = Gates(0);
+		int pos = ueber[spalte];
+		if ((*map)[zeile][pos].type>4){
+			Gates o(0);
+			o.pos_rect(pos+1,zeile);
+			auto it = (*map)[zeile].begin();
+			it = (*map)[zeile].insert(it+pos+1,o);
+			
 		}
-		else{
-			(*map)[zeile][spalte-1] = Gates(0);
+		if (ueber[spalte]==ueber[spalte-1]){
+			Gates o(0);
+			o.pos_rect(pos,zeile);
+			(*map)[zeile][pos] = o;
+			//Gates u(0);
+			//u.pos_rect(pos+1,zeile);
+			//auto it = (*map)[zeile].begin();
+			//it = (*map)[zeile].insert(it+pos+1,u);
+			pos++;
 		}
-
-		}
-		if ((*map)[zeile][spalte-2].type>4)
-			spalte--;
-		(*map)[zeile][spalte] = (*this);
-		if (breite == 2)
-			(*map)[zeile].erase((*map)[zeile].begin()+spalte + 1);
-		for (vector<Gates> uv : (*map)){
-			for (Gates g : uv){
-				cout << g.type;
+		(*map)[zeile][pos] = (*this);
 	}
-	cout<< endl;
+	if (breite == 2){
+		vector<int> ueber;
+		int n = 0, i=0; 
+		while (ueber.size() < 8){
+			if ((*map)[zeile][i].type>4){
+				ueber.push_back(n);
+				ueber.push_back(n);
+			}
+			else
+				ueber.push_back(n);
+			n++;
+			i++;
+
+		}
+		for (int a : ueber) cout << a << endl;
+		int pos = ueber[spalte];
+		cout << pos << " "<< ueber[spalte+1] << " " << spalte << " " << ueber.size()-2 << endl;
+		if (ueber[spalte]!=ueber[spalte+1] && spalte!=0 && spalte!=ueber.size()-2){
+			if (ueber[spalte+1]==ueber[spalte+2]){
+				if (ueber[spalte]==ueber[spalte-1]){
+					cout << "zoom" << endl;
+					(*map)[zeile][pos] = Gates(0);
+					(*map)[zeile][pos].pos_rect(pos,zeile);
+					pos++;
+					auto it = (*map)[zeile].begin();
+					it = (*map)[zeile].insert(it+pos+1,Gates(0));
+					(*map)[zeile][pos+1].pos_rect(pos+2,zeile);
+				}
+				else{
+					cout <<"knosk"<<endl;
+					(*map)[zeile][pos+1] = Gates(0);
+					(*map)[zeile][pos+1].pos_rect(pos+1,zeile);
+				}
+			}
+			if (ueber[spalte]==ueber[spalte-1]){
+				if (ueber[spalte+1]!=ueber[spalte+2]){
+					auto it = (*map)[zeile].begin();
+					it = (*map)[zeile].insert(it+pos,Gates(0));
+					(*map)[zeile][pos].pos_rect(pos,zeile);
+					pos++;
+					(*map)[zeile].erase((*map)[zeile].begin()+pos+1);
+				}
+			}
+			else{
+				cout << "boom" << endl;
+				(*map)[zeile].erase((*map)[zeile].begin()+(pos+1));
+			}
+
+		}
+		if (ueber[spalte]!=ueber[spalte+1] && spalte==0){
+			if (ueber[spalte+1]==ueber[spalte+2]){
+				(*map)[zeile][pos+1] = Gates(0);
+				(*map)[zeile][pos+1].pos_rect(pos+2,zeile);
+			}
+			else
+				(*map)[zeile].erase((*map)[zeile].begin()+(pos+1));
+			
+		}
+		if (ueber[spalte]!=ueber[spalte+1] && spalte==ueber.size()-2){
+			if (ueber[spalte]==ueber[spalte-1]){
+				(*map)[zeile][pos] = Gates(0);
+				(*map)[zeile][pos].pos_rect(pos,zeile);
+				pos++;
+			}
+			else
+				(*map)[zeile].erase((*map)[zeile].begin()+(pos+1));	
+		}
+
+		(*map)[zeile][pos] = (*this);
+
+	}
+	for (vector<Gates> uv:(*map)){
+		for (Gates g : uv){
+			cout << g.type;
+		}
+		cout << endl;
+	}
+	cout <<endl;
 }
-cout << endl;
+
+void Gates::pos_rect(int xn, int yn){
+	rect.y = yn * 60 + 70;
+	rect.x = xn * 50 + 400;
 }

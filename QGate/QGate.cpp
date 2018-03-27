@@ -22,8 +22,10 @@ for (int i = 1; i < 7; ++i)
 vector<vector<Gates>>map,palette;
 for (int i=0; i < 11; i++){
 	vector<Gates>zeile;
-	for (int i=0; i<8; i++){
-		zeile.push_back(Gates(0));
+	for (int j=0; j<8; j++){
+		Gates o(0);
+		o.pos_rect(j,i);
+		zeile.push_back(o);
 	}
 	map.push_back(zeile);
 }
