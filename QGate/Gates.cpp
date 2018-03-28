@@ -105,6 +105,8 @@ void Gates::pos_in(vector<vector<Gates>>*map){
 	spalte = (xn - xn%50)/50 - (breite+1)%2 * (1 - round((xn%50)/50));
 	if (breite == 2 && spalte ==7)
 		spalte--;
+	if (breite == 2 && spalte == -1)
+		spalte++;
 	rect.y = zeile * 60 + 70;
 	rect.x = spalte * 50 + 400;
 	if (breite == 1){
@@ -114,7 +116,6 @@ void Gates::pos_in(vector<vector<Gates>>*map){
 			if ((*map)[zeile][i].type>4){
 				ueber.push_back(n);
 				ueber.push_back(n);
-				i++;
 			}
 			else
 				ueber.push_back(n);
@@ -125,19 +126,15 @@ void Gates::pos_in(vector<vector<Gates>>*map){
 		int pos = ueber[spalte];
 		if ((*map)[zeile][pos].type>4){
 			Gates o(0);
-			o.pos_rect(pos+1,zeile);
+			o.pos_rect(spalte+1,zeile);
 			auto it = (*map)[zeile].begin();
 			it = (*map)[zeile].insert(it+pos+1,o);
 			
 		}
 		if (ueber[spalte]==ueber[spalte-1]){
 			Gates o(0);
-			o.pos_rect(pos,zeile);
+			o.pos_rect(spalte,zeile);
 			(*map)[zeile][pos] = o;
-			//Gates u(0);
-			//u.pos_rect(pos+1,zeile);
-			//auto it = (*map)[zeile].begin();
-			//it = (*map)[zeile].insert(it+pos+1,u);
 			pos++;
 		}
 		(*map)[zeile][pos] = (*this);
@@ -156,37 +153,32 @@ void Gates::pos_in(vector<vector<Gates>>*map){
 			i++;
 
 		}
-		for (int a : ueber) cout << a << endl;
 		int pos = ueber[spalte];
-		cout << pos << " "<< ueber[spalte+1] << " " << spalte << " " << ueber.size()-2 << endl;
 		if (ueber[spalte]!=ueber[spalte+1] && spalte!=0 && spalte!=ueber.size()-2){
 			if (ueber[spalte+1]==ueber[spalte+2]){
 				if (ueber[spalte]==ueber[spalte-1]){
-					cout << "zoom" << endl;
 					(*map)[zeile][pos] = Gates(0);
-					(*map)[zeile][pos].pos_rect(pos,zeile);
+					(*map)[zeile][pos].pos_rect(spalte+1,zeile);
 					pos++;
 					auto it = (*map)[zeile].begin();
 					it = (*map)[zeile].insert(it+pos+1,Gates(0));
-					(*map)[zeile][pos+1].pos_rect(pos+2,zeile);
+					(*map)[zeile][pos+1].pos_rect(spalte+2,zeile);
 				}
 				else{
-					cout <<"knosk"<<endl;
 					(*map)[zeile][pos+1] = Gates(0);
-					(*map)[zeile][pos+1].pos_rect(pos+1,zeile);
+					(*map)[zeile][pos+1].pos_rect(spalte+2,zeile);
 				}
 			}
 			if (ueber[spalte]==ueber[spalte-1]){
 				if (ueber[spalte+1]!=ueber[spalte+2]){
 					auto it = (*map)[zeile].begin();
 					it = (*map)[zeile].insert(it+pos,Gates(0));
-					(*map)[zeile][pos].pos_rect(pos,zeile);
+					(*map)[zeile][pos].pos_rect(spalte,zeile);
 					pos++;
 					(*map)[zeile].erase((*map)[zeile].begin()+pos+1);
 				}
 			}
-			else{
-				cout << "boom" << endl;
+			if(ueber[spalte]!=ueber[spalte-1] && ueber[spalte+1]!=ueber[spalte+2]){
 				(*map)[zeile].erase((*map)[zeile].begin()+(pos+1));
 			}
 
@@ -194,7 +186,7 @@ void Gates::pos_in(vector<vector<Gates>>*map){
 		if (ueber[spalte]!=ueber[spalte+1] && spalte==0){
 			if (ueber[spalte+1]==ueber[spalte+2]){
 				(*map)[zeile][pos+1] = Gates(0);
-				(*map)[zeile][pos+1].pos_rect(pos+2,zeile);
+				(*map)[zeile][pos+1].pos_rect(spalte+2,zeile);
 			}
 			else
 				(*map)[zeile].erase((*map)[zeile].begin()+(pos+1));
@@ -203,7 +195,7 @@ void Gates::pos_in(vector<vector<Gates>>*map){
 		if (ueber[spalte]!=ueber[spalte+1] && spalte==ueber.size()-2){
 			if (ueber[spalte]==ueber[spalte-1]){
 				(*map)[zeile][pos] = Gates(0);
-				(*map)[zeile][pos].pos_rect(pos,zeile);
+				(*map)[zeile][pos].pos_rect(spalte,zeile);
 				pos++;
 			}
 			else
@@ -213,13 +205,6 @@ void Gates::pos_in(vector<vector<Gates>>*map){
 		(*map)[zeile][pos] = (*this);
 
 	}
-	for (vector<Gates> uv:(*map)){
-		for (Gates g : uv){
-			cout << g.type;
-		}
-		cout << endl;
-	}
-	cout <<endl;
 }
 
 void Gates::pos_rect(int xn, int yn){

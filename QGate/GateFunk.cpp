@@ -52,7 +52,7 @@ void tensmh(vector<vector<vector<complex<double>>>>* mats){
 }
 
 void klicked(vector<vector<Gates>>*map,vector<vector<Gates>>*palette,vector<QBit>*eingang,SDL_Window *win, bool *laeuft){
-    int xn,yn;
+    int xn,yn, zeile, spalte;
     SDL_GetMouseState( &xn, &yn);
     if (xn>1179 && yn<51 ){
         *laeuft = false;
@@ -92,8 +92,80 @@ void klicked(vector<vector<Gates>>*map,vector<vector<Gates>>*palette,vector<QBit
         paint_gmap(map,win);
         SDL_UpdateWindowSurface(win);
         delete gz;
+        return;
     }
-}
+    if (xn<800 && xn>400 && yn > 65 && yn<725 && (60-(yn-65)%60)>5 && (60-(yn-65)%60)<55){
+        xn -= 400;
+        yn -= 65;
+        zeile = (yn - yn%60)/60;
+        spalte = (xn - xn%50)/50;
+        vector<int> ueber;
+        int n = 0, i = 0; 
+        while (ueber.size() < 8){
+            if ((*map)[zeile][i].type>4){
+                ueber.push_back(n);
+                ueber.push_back(n);
+            }
+            else
+                ueber.push_back(n);
+            n++;
+            i++;
+
+        }
+        int pos = ueber[spalte];
+        int ty = (*map)[zeile][pos].type;
+        if (ty == 0)
+            return;
+        Gates o(0);
+        if (ueber[spalte]==ueber[spalte+1]){
+            Gates u(0);
+            u.pos_rect(spalte+1,zeile);
+            o.pos_rect(spalte,zeile);
+            (*map)[zeile][pos]=o;
+            auto it = (*map)[zeile].begin();
+            it = (*map)[zeile].insert(it+pos+1,u);
+        }
+        else if (ueber[spalte]==ueber[spalte-1]){
+            Gates u(0);
+            u.pos_rect(spalte,zeile);
+            o.pos_rect(spalte-1,zeile);
+            (*map)[zeile][pos]=o;
+            auto it = (*map)[zeile].begin();
+            it = (*map)[zeile].insert(it+pos+1,u);
+        }
+        else{
+            o.pos_rect(spalte,zeile);
+            (*map)[zeile][pos]=o;
+        }
+        Gates *gz = new Gates(ty);
+        (*gz).move(win,palette,map);
+        SDL_GetMouseState( &xn, &yn);
+        if (xn>800 || xn<400 || yn<70 || yn>720){
+            delete gz;
+            paint_back(win);
+            paint_gmap(palette,win);
+            paint_gmap(map,win);
+            SDL_UpdateWindowSurface(win);
+            for (vector<Gates> uv:(*map)){
+            for (Gates g : uv){
+            cout << g.type;
+            }
+            cout << endl;
+            }
+            cout <<endl;
+            return;
+        }
+        (*gz).pos_in(map);
+        paint_back(win);
+        paint_gmap(palette,win);
+        paint_gmap(map,win);
+        SDL_UpdateWindowSurface(win);
+        delete gz;
+        return;
+    }
+
+}   
+
 
 void paint_back(SDL_Window *win){
     SDL_Surface *back = IMG_Load("./Bilder/map.png");

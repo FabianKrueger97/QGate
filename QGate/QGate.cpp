@@ -8,7 +8,7 @@ if (SDL_Init(SDL_INIT_VIDEO) != 0){
             cout << "SDL_Init Error: " << SDL_GetError() << endl;
             return 1;
         }
-            SDL_Window *win = SDL_CreateWindow("QGate", 0, 0, 1200, 800, SDL_WINDOW_SHOWN);
+            SDL_Window *win = SDL_CreateWindow("QGate", 10, 10, 1200, 800, SDL_WINDOW_SHOWN);
                 if (win == 0) {
                 cout << "window failed";
                 return 1;

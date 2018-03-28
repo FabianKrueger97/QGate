@@ -21,9 +21,9 @@ class Gates{
     private:
         SDL_Surface* surf;
         SDL_Rect rect;
-        int type;
     public:
         Gates(int type);
+        int type;
         vector<vector<vector<complex<double>>>> mat;
         int breite;
         int num;
