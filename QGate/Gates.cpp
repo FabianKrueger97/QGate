@@ -68,14 +68,13 @@ Gates::Gates(int typ){
 	rect.w = 50*breite;
 	rect.h = 50*breite;
 }
-
 void Gates::paint_gate(SDL_Window* win){
 	SDL_Surface *screen;
 	screen = SDL_GetWindowSurface(win);
 	SDL_BlitSurface(surf,NULL,screen,&rect);
 }
 
-void Gates::move(SDL_Window* win,vector<vector<Gates>>*palette,vector<vector<Gates>>*map){
+void Gates::move(SDL_Window* win,vector<vector<Gates>>*palette,vector<vector<Gates>>*map, SDL_Surface* aufgabe){
 	SDL_Event e;
 	bool left = false;
 	while(!left){
@@ -85,7 +84,7 @@ void Gates::move(SDL_Window* win,vector<vector<Gates>>*palette,vector<vector<Gat
 			SDL_GetMouseState( &xn, &yn);
 			rect.x = xn-25*breite;
 			rect.y = yn-25;
-			paint_back(win);
+			paint_back(win,aufgabe);
 			paint_gmap(palette,win);
 			paint_gmap(map,win);
 			paint_gate(win);
@@ -98,6 +97,7 @@ void Gates::move(SDL_Window* win,vector<vector<Gates>>*palette,vector<vector<Gat
 
 void Gates::pos_in(vector<vector<Gates>>*map){
 	int xn,yn,zeile,spalte;
+	string marker;
 	SDL_GetMouseState( &xn, &yn);
 	xn -= 400;
 	yn -= 65;
@@ -125,6 +125,7 @@ void Gates::pos_in(vector<vector<Gates>>*map){
 		}
 		int pos = ueber[spalte];
 		if ((*map)[zeile][pos].type>4){
+			marker = "1";
 			Gates o(0);
 			o.pos_rect(spalte+1,zeile);
 			auto it = (*map)[zeile].begin();
@@ -132,6 +133,7 @@ void Gates::pos_in(vector<vector<Gates>>*map){
 			
 		}
 		if (ueber[spalte]==ueber[spalte-1]){
+			marker = "2";
 			Gates o(0);
 			o.pos_rect(spalte,zeile);
 			(*map)[zeile][pos] = o;
@@ -157,6 +159,7 @@ void Gates::pos_in(vector<vector<Gates>>*map){
 		if (ueber[spalte]!=ueber[spalte+1] && spalte!=0 && spalte!=ueber.size()-2){
 			if (ueber[spalte+1]==ueber[spalte+2]){
 				if (ueber[spalte]==ueber[spalte-1]){
+					marker = "3";
 					(*map)[zeile][pos] = Gates(0);
 					(*map)[zeile][pos].pos_rect(spalte+1,zeile);
 					pos++;
@@ -165,12 +168,14 @@ void Gates::pos_in(vector<vector<Gates>>*map){
 					(*map)[zeile][pos+1].pos_rect(spalte+2,zeile);
 				}
 				else{
+					marker = "4";
 					(*map)[zeile][pos+1] = Gates(0);
 					(*map)[zeile][pos+1].pos_rect(spalte+2,zeile);
 				}
 			}
 			if (ueber[spalte]==ueber[spalte-1]){
 				if (ueber[spalte+1]!=ueber[spalte+2]){
+					marker = "5";
 					auto it = (*map)[zeile].begin();
 					it = (*map)[zeile].insert(it+pos,Gates(0));
 					(*map)[zeile][pos].pos_rect(spalte,zeile);
@@ -179,32 +184,45 @@ void Gates::pos_in(vector<vector<Gates>>*map){
 				}
 			}
 			if(ueber[spalte]!=ueber[spalte-1] && ueber[spalte+1]!=ueber[spalte+2]){
+				marker = "6";
 				(*map)[zeile].erase((*map)[zeile].begin()+(pos+1));
 			}
 
 		}
 		if (ueber[spalte]!=ueber[spalte+1] && spalte==0){
 			if (ueber[spalte+1]==ueber[spalte+2]){
+				marker = "7";
 				(*map)[zeile][pos+1] = Gates(0);
 				(*map)[zeile][pos+1].pos_rect(spalte+2,zeile);
 			}
-			else
+			else{
+				marker = "8";
 				(*map)[zeile].erase((*map)[zeile].begin()+(pos+1));
+			}
 			
 		}
 		if (ueber[spalte]!=ueber[spalte+1] && spalte==ueber.size()-2){
 			if (ueber[spalte]==ueber[spalte-1]){
+				marker = "9";
 				(*map)[zeile][pos] = Gates(0);
 				(*map)[zeile][pos].pos_rect(spalte,zeile);
 				pos++;
 			}
-			else
+			else{
+				marker = "10";
 				(*map)[zeile].erase((*map)[zeile].begin()+(pos+1));	
+			}
 		}
 
 		(*map)[zeile][pos] = (*this);
 
 	}
+	int gesamtbreite = 0;
+	for (Gates g : (*map)[zeile]){
+		gesamtbreite += g.breite;
+	}
+	if (gesamtbreite != 8)
+		throw runtime_error("Gates haben (im Backend) nicht die gesamtlaenge 8. Gates.cpp mit Marker:" + marker);
 }
 
 void Gates::pos_rect(int xn, int yn){

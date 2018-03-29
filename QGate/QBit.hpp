@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include <math.h>
 #include <complex.h>
+#include "Gates.hpp"
 using namespace std;
 class QBit{
 private:
@@ -16,6 +17,7 @@ public:
     vector<complex<double>>vek;
     QBit(complex<double>a0, complex<double>b0);
     void make_value();
+    void paint_value(SDL_Window* win, int x, int y);
     };
 
 #endif // QBIT_H

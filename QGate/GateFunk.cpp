@@ -51,11 +51,36 @@ void tensmh(vector<vector<vector<complex<double>>>>* mats){
 
 }
 
-void klicked(vector<vector<Gates>>*map,vector<vector<Gates>>*palette,vector<QBit>*eingang,SDL_Window *win, bool *laeuft){
+void klicked(vector<vector<Gates>>*map,vector<vector<Gates>>*palette,vector<QBit>*eingang,vector<QBit>*loesung,SDL_Window *win, SDL_Surface* aufgabe, bool *laeuft, bool *geschafft){
     int xn,yn, zeile, spalte;
     SDL_GetMouseState( &xn, &yn);
     if (xn>1179 && yn<51 ){
         *laeuft = false;
+    }
+    if (xn > 1000 && xn < 1100 && yn > 50 && yn < 100){
+        vector<complex<double>> calc = gates_run(map,eingang);
+        vector<complex<double>> soll = tensv((*loesung));
+        paint_back(win, aufgabe);
+        paint_gmap(palette,win);
+        paint_gmap(map,win);
+        *geschafft = abgleich(win,soll,calc);
+        if (*geschafft == true){
+            int x = 400, y = 20;
+            for (QBit b:(*eingang)){
+                b.paint_value(win, x,y);
+                x +=50;
+                }
+            cout << "richtig"<< endl;
+            SDL_UpdateWindowSurface(win);
+            SDL_Delay(100000);
+            return;
+        }
+        else{
+            cout << "leider falsch" << endl;
+            SDL_UpdateWindowSurface(win);
+            SDL_Delay(100000);
+            return;}
+
     }
     if (xn>999 && xn<1101 && yn>99 && yn<301){
         int t;
@@ -76,18 +101,18 @@ void klicked(vector<vector<Gates>>*map,vector<vector<Gates>>*palette,vector<QBit
         if (yn<301 && yn>250)
             t = 6;
         Gates *gz = new Gates(t);
-        (*gz).move(win,palette,map);
+        (*gz).move(win,palette,map,aufgabe);
         SDL_GetMouseState( &xn, &yn);
         if (xn>800 || xn<400 || yn<70 || yn>720){
             delete gz;
-            paint_back(win);
+            paint_back(win, aufgabe);
             paint_gmap(palette,win);
             paint_gmap(map,win);
             SDL_UpdateWindowSurface(win);
             return;
         }
         (*gz).pos_in(map);
-        paint_back(win);
+        paint_back(win, aufgabe);
         paint_gmap(palette,win);
         paint_gmap(map,win);
         SDL_UpdateWindowSurface(win);
@@ -138,11 +163,11 @@ void klicked(vector<vector<Gates>>*map,vector<vector<Gates>>*palette,vector<QBit
             (*map)[zeile][pos]=o;
         }
         Gates *gz = new Gates(ty);
-        (*gz).move(win,palette,map);
+        (*gz).move(win,palette,map,aufgabe);
         SDL_GetMouseState( &xn, &yn);
         if (xn>800 || xn<400 || yn<70 || yn>720){
             delete gz;
-            paint_back(win);
+            paint_back(win,aufgabe);
             paint_gmap(palette,win);
             paint_gmap(map,win);
             SDL_UpdateWindowSurface(win);
@@ -156,7 +181,7 @@ void klicked(vector<vector<Gates>>*map,vector<vector<Gates>>*palette,vector<QBit
             return;
         }
         (*gz).pos_in(map);
-        paint_back(win);
+        paint_back(win,aufgabe);
         paint_gmap(palette,win);
         paint_gmap(map,win);
         SDL_UpdateWindowSurface(win);
@@ -167,11 +192,17 @@ void klicked(vector<vector<Gates>>*map,vector<vector<Gates>>*palette,vector<QBit
 }   
 
 
-void paint_back(SDL_Window *win){
+void paint_back(SDL_Window *win, SDL_Surface* aufgabe){
     SDL_Surface *back = IMG_Load("./Bilder/map.png");
     SDL_Surface *screen;
     screen = SDL_GetWindowSurface(win);
+    SDL_Rect dst;
+    dst.x = 50;
+    dst.y = 70;
+    dst.w = 200;
+    dst.h = 230;
     SDL_BlitSurface(back,NULL,screen,NULL);
+    SDL_BlitSurface(aufgabe,NULL,screen,&dst);
     }
 void paint_gmap(vector<vector<Gates>>*map, SDL_Window *win){
     for(vector<Gates> uv : (*map)){
@@ -179,4 +210,80 @@ void paint_gmap(vector<vector<Gates>>*map, SDL_Window *win){
             g.paint_gate(win);
         }
     }
+}
+
+vector<complex<double>> gates_run(vector<vector<Gates>>*map,vector<QBit>*Bits){
+    vector<complex<double>> input = tensv((*Bits));
+    for (vector<Gates> reihe : (*map)){
+        vector<complex<double>> result = {};
+        vector<vector<complex<double>>> uni = tensm(reihe);
+        for (vector<complex<double>> zeile : uni){
+            complex<double> eintrag = 0.;
+            try{
+            for (int i=0;i<zeile.size()-1;i++)
+                eintrag += zeile[i]*input[i];
+            result.push_back(eintrag);
+        }
+            catch (const runtime_error& err){
+            cerr << err.what()<<endl;
+        }
+    }
+        
+        input = result;
+}
+return input;
+}
+
+double get_p(vector<complex<double>>a,vector<complex<double>>b){
+    complex<double>result1,result2;
+    for (int i = 0; i<a.size()-1; i++){
+        result1+= conj(a[i])*b[i];
+        result2+= conj(b[i])*a[i];
+    }
+    return abs(result1*result2);
+}
+bool abgleich(SDL_Window* win, vector<complex<double>> soll, vector<complex<double>>vist){
+    vector<vector<QBit>>moeglichkeiten;
+    vector<QBit> erste;
+    for (int i=0;i<8;i++){
+         erste.push_back(QBit(1.,0.));
+        }
+    moeglichkeiten.push_back(erste);
+    for (int i = 0; i<8 ; i++){
+        int s = moeglichkeiten.size();
+        for (int j = 0; j<s;j++){
+            vector<QBit> n_uv = moeglichkeiten[j];
+            n_uv[i] = QBit(0.,1.);
+            moeglichkeiten.push_back(n_uv);
+        }
+    }
+    vector<vector<complex<double>>>tens_moes;
+    vector<double>p;
+    for (vector<QBit> uv : moeglichkeiten){
+        vector<complex<double>>tens_moe = tensv(uv);
+        p.push_back(get_p(tens_moe,vist));
+        tens_moes.push_back(tens_moe);
+    }
+    double sum = 0., sum2 = 0., treffer;
+    int wurf = rand();
+    wurf = wurf%1000;
+    treffer = ((double) wurf)/1000.;
+    int i = 0;
+    while (sum<treffer){
+        sum+=p[i];
+        i++;
+    }
+    i--;
+    int x = 400, y = 720;
+    for (QBit b:moeglichkeiten[i]){
+        b.paint_value(win, x,y);
+        x +=50;}
+    
+    if (tens_moes[i]==soll){
+        return true;
+    }
+    else
+        return false;
+
+
 }

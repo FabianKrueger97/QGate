@@ -34,3 +34,18 @@ void QBit::make_value(){
     else
         value ="("+a_real_stream.str()+" + "+"i * "+a_im_stream.str()+ ")" + " |0> " + " + "  + "(" + b_real_stream.str()+" + "+"i * "+b_im_stream.str() +")" + " |1>";
 }
+
+void QBit::paint_value(SDL_Window* win, int x, int y){
+    SDL_Surface* null = IMG_Load("./Bilder/null.png"),*eins = IMG_Load("./Bilder/eins.png");
+    SDL_Rect dst;
+    dst.x = x;
+    dst.y = y;
+    dst.w = 50;
+    dst.h = 50;
+    SDL_Surface *screen;
+    screen = SDL_GetWindowSurface(win);
+    if (abs(vek[0])==1)
+        SDL_BlitSurface(null,NULL,screen,&dst);
+    else
+        SDL_BlitSurface(eins,NULL,screen,&dst);
+}

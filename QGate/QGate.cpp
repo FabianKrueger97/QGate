@@ -4,6 +4,7 @@
 using namespace std;
 
 int main(int, char**){
+srand (time(NULL));
 if (SDL_Init(SDL_INIT_VIDEO) != 0){
             cout << "SDL_Init Error: " << SDL_GetError() << endl;
             return 1;
@@ -13,8 +14,8 @@ if (SDL_Init(SDL_INIT_VIDEO) != 0){
                 cout << "window failed";
                 return 1;
                 }
+
 vector<Gates>pal;
-paint_back(win);
 for (int i = 1; i < 7; ++i)
 {
 	pal.push_back(Gates(i));
@@ -30,20 +31,21 @@ for (int i=0; i < 11; i++){
 	map.push_back(zeile);
 }
 palette.push_back(pal);
-paint_back(win);
+SDL_Surface *aufgabe = IMG_Load("./Bilder/A1.png");
+paint_back(win, aufgabe);
 paint_gmap(&palette,win);
 paint_gmap(&map,win);
 SDL_UpdateWindowSurface(win);
-bool laeuft = true;
+bool laeuft = true, geschafft = false;
 vector<QBit> eingang;
-for (int i=0;i<9;i++){
-	eingang.push_back(QBit((1.,0),(0.,0.)));
+for (int i=0;i<8;i++){
+	eingang.push_back(QBit(1.,0.));
 }
-while (laeuft){
+while (laeuft  && !geschafft){
 	SDL_Event e;
 	while(SDL_PollEvent(&e)){
 		if(e.type == SDL_MOUSEBUTTONDOWN){
-			klicked(&map,&palette,&eingang,win,&laeuft);
+			klicked(&map,&palette,&eingang,&eingang,win,aufgabe,&laeuft,&geschafft);
 		}
 	}
 }
